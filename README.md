@@ -1,1152 +1,366 @@
-# devops .
+# 🚀 DevOps Mastery Playground: End-to-End AWS & LocalStack Infrastructure
 
+[![Terraform](https://img.shields.io/badge/IaC-Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![LocalStack](https://img.shields.io/badge/Local-LocalStack-4c2c92?style=for-the-badge&logo=localstack&logoColor=white)](https://localstack.cloud/)
+[![Docker](https://img.shields.io/badge/Container-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![AWS](https://img.shields.io/badge/Cloud-AWS-FF9900?style=for-the-badge&logo=amazon-web-services&logoColor=white)](https://aws.amazon.com/)
 
-link to presentation -> https://docs.google.com/presentation/d/1fb-fyxiP5T-3Xdn1d7XT1kwAY2jOSOCy1TY5jITSOtw/edit?usp=sharing 
-create your own account 
-## START
-fork https://github.com/handson-academy/ops-basic-spring/ to your own git 
+A professional, production-grade DevOps showcase demonstrating the deployment of a full-stack application (Spring Boot & Angular) on AWS using modern Infrastructure as Code (IaC), automated CI/CD pipelines, containerization, and advanced CDN routing. 
 
-### EC2
-create ec2 instance: 
-name->testec2, new keypair-> test,  launch instance 
-go to inboud rules-> allow all traffic
+This repository implements a **Local-First development paradigm**, leveraging **LocalStack** to fully simulate AWS environments (VPC, EC2, S3, IAM, Route53, CloudFront) locally before pushing to production AWS Cloud.
 
-
-### DOCKER
-```
-sudo yum update -y
-sudo yum install -y docker
-sudo service docker start
-sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
-sudo docker run -d \
-    -e MYSQL_ROOT_PASSWORD=Unix11 \
-    -e MYSQL_DATABASE=students \
-    -e MYSQL_USER=students \
-    -e MYSQL_PASSWORD=Unix11 \
-    -p 3306:3306 \
-    -v mysql-data:/var/lib/mysql \
-    mysql:8.0
-    
-sudo docker ps
-sudo docker logs [containerid]
-
-sudo docker kill [containerid]
-```
-
-### GIT
-attach ssh key to git
-```
-ssh-keygen
-cat ./.ssh/id_rsa.pub
-```
-
-point to local db 
-change src/main/resources/application.properties
-```
-spring.datasource.url=jdbc:mysql://mysql:3306/students
-spring.datasource.username=students
-spring.datasource.password=Unix11
-```
-
-install git
-```
-sudo yum update
-sudo yum install git
-git clone git@github.com:shlomi/ops-basic-spring.git 
-```
-### BASIC Linux commands
-```
-fork repo: https://github.com/handson-academy/basic-html to your account 
-explain developer tools
-main
-explain domain / url / http(s) / request and response headers/ 
-copy to postman
-make a curl
-curl into file 1.html
-
-echo "
-something one
-something two
-something three
-" > 2.txt
-
-grep something *
-grep three *
-grep something * | wc -l
-
-sudo su
-vi 3.txt
-aaa
-bbb
-ccc
-ddd
-
-add text 
-delete lines
-save
-
-chmod 007 3.txt
-cat 3.txt
-
-exit
-
-cat 3.txt
-sudo cat 3.txt
-
-
-git clone [your repo]
-cd basic-html/
-
-sudo yum install python
-python --version
-python -m http.server 5555
-nohup python -m http.server 5555 &
-tail -f nohup.out
-
-ps -ef | grep python
-pgrep python
-kill -9 [pid]
-pkill python
-
-test the http://[public ip]:5555/index.html 
-
-go to git -> settings -> developer settings-> personal access tokens -> tokens (classic)
-generate new token (classic
-no expiration all privileges
-
-git branch test-branch
-git checkout test-branch
-git status
-vi index.html 
-vi index2.html
-git add index2.html
-git commit -a -m "2 indexes"
-git push
-
-create a pull request
-show that handson academy can merge
-
-create a new branch in ui test-branch
-create new files
-git pull
-ll
-git checkout test-branch2
-ll
-
-cd ..
-find . -name "index*.html" 
-find . -name "index*.html" | xargs grep Hello
-grep -r Hello *
-
-mkdir newdir
-echo "
-{\"service\": {\"id\": 3, \"name\" : \"service3\"}}
-" > newdir/1.json
-
-sudo yum install jq
-cat  newdir/1.json | jq -r '.service.name'
-
-echo "
-version: v1
-services:
-  service1: myservice
-" >  newdir/2.yml
-
-sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-sudo chmod a+x /usr/local/bin/yq
-cat  newdir/2.yml | yq -r '.services.service1'
-
-sed -i 's/myservice/nivservice/g' newdir/2.yml 
-cat  newdir/2.yml | yq -r '.services.service1'
-
-ll
-rm -rf newdir/
-
-pwd
-cd ~/basic-html/
- 
-ssh-keygen
-cat ~/.ssh/id_rsa.pub 
-go to github -> settings -> ssh and gpg add the key
-
-make a private repository
-try to clone with https
-now with ssh
-
-df -h
-find . -type f -exec du -ah {} + | sort -rh | head -n 10
-```
-
-
-
-### MAVEN
-install maven
-```
-sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
-sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
-sudo yum install -y apache-maven
-
-cd ops-basic-spring
-mvn clean install
-```
-there is a new folder called target with basic-0.0.1-SNAPSHOT.jar file
-### CREATE DOCKERHUB USER
-https://dockerhub.com 
-create token account setting -> security
-
-### DOCKERIZE
-```
-sudo docker build . -t backend
-sudo docker login
-shlomi
-Jul201789#
-sudo docker tag backend shlomi/backend
-sudo docker push shlomi/backend
-
-git pull
-echo "
-version: \"3\"
-services:
-  appserver:
-    container_name: server
-    hostname: localhost
-    image: shlomi/backend:latest
-    ports:
-      - "8080:8080"
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: Unix11
-      MYSQL_DATABASE: students
-      MYSQL_USER: students
-      MYSQL_PASSWORD: Unix11
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-    privileged: true
-" >>  docker-compose.yml
-
-sudo  docker-compose   up -d
-# test http://[ip address]:8080/swagger-ui.html
-sudo docker-compose   down
-```
-### TEST FRONTEND
-https://github.com/handson-academy/ops-basic-angular
-```
-cd ~
-git clone git@github.com:handson-academy/ops-basic-angular.git
-cd ops-basic-angular
-
-echo "
-export const environment = {
-  production: true,
-  url: 'http://13.50.247.173:8080/api' 
-};
-" > src/environments/environment.prod.ts
-
-echo "
-export const environment = {
-  production: false,
-  url: 'http://13.50.247.173:8080/api' 
-};
-" > src/environments/environment.ts
-
-
-sudo docker run -p 3000:3000 -v $(pwd):/app  -d node:14 tail -f /dev/null
-sudo docker ps
-sudo docker exec -it [containerid]  /bin/bash
-
-cd /app
-npm install
-npm run build --prod
-
-
-npm install -g http-server
-nohup http-server /app/dist/webapp -p 3000 &
-
-```
-test on http://13.50.247.173:3000
-
-### DOCKER AUTOMATION
-add the following secrets:
-```
-DOCKERHUB_USERNAME = shlomi
-DOCKERHUB_TOKEN = dckr_pat_wNsuA4lJiuBnc4iCsNCmxjCVjc4
-EC2_INSTANCE_PUBLIC_IP = 13.50.235.108
-SSH_KEY = 
-
-```
-
-
-add .github/workflows/build.yml
-```
-name: Build and Deploy
-
-on:
-  push:
-    branches:
-      - master
-
-env:
-  APP_VERSION: v1.0.${{ github.run_number }}
-
-jobs:
-  build:
-    name: Build & Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESSE_TOKEN }}
-        run: mvn clean install
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ env.APP_VERSION }}
-      - name: Deploy to AWS EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_INSTANCE_PUBLIC_IP }}
-          username: ec2-user
-          key: ${{ secrets.SSH_KEY }} # store the SSH password as a secret in the repository
-          script: |
-            cd /home/ec2-user/ops-basic-spring
-            sudo /usr/local/bin/docker-compose  down || true
-            sed -i 's/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:.*/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:v1.0.${{ github.run_number }}/g' /home/ec2-user/ops-basic-spring/docker-compose.yml
-            sudo /usr/local/bin/docker-compose  up -d || true
-```
-change /src/main/java/com/handson/basic/controller/StudentsController.java 
-getHighSatStudents -> getHighSatStudents1
-check that swagger updates
-
-### S3 deploy
-create bucket niv.backend.students 
-public false
-in properties make static web hosting true
-add this to permissions:
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::niv.backend.students/*"
-        }
-    ]
-}
-```
-
-
-in AIM create a user for the deploy with admin privileges 
-create and save the access key
-fork the repository: https://github.com/handson-academy/ops-basic-angular
-fill the secrets:
-```
-AWS_ACCESS_KEY_ID: 
-AWS_SECRET_ACCESS_KEY:
-AWS_REGION: <YOUR_AWS_REGION>
-S3_BUCKET_NAME: <YOUR_S3_BUCKET_NAME>
-```
-change backend url to: 'http://13.50.235.108:8080/api'
-in ops-basic-angular/src/environments/environment.ts  
-and ops-basic-angular/src/environments/environment-prod.ts 
-
-create the build.yml
-```
-name: Deploy to S3 Bucket
-on:
-  push:
-    branches:
-      - main
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-      - name: Install dependencies
-        run: npm install
-      - name: Build application
-        run: npm run build --prod
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install awscli --upgrade --user
-      - name: Deploy to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-        run: |
-          aws s3 sync ./dist/webapp s3://${{ env.S3_BUCKET_NAME }} --delete
-```
-
-### DOMAIN
-1. buy a domain on https://start.godaddy.com/ 
-
-in aws go to: route53:
-create hosted zone
-
-take the values from here:
-https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones#ListRecordSets/Z0578988Z5FGXIZ849XL 
-
-to godaddy:
-
-change nameservers from :
-
-Nameservers
-ns19.domaincontrol.com 
-ns20.domaincontrol.com 
-
-to: 
-ns-1255.awsdns-28.org 
-ns-579.awsdns-08.net  
-ns-438.awsdns-54.com  
-ns-1717.awsdns-22.co.uk 
-
-### Domain for ec2
-create A record -> [ec2 ip] -> ec2-raw.shlomi.com
-
-
-### Cloudfront
-XXXX create 
-
-
-in the project change the url in 
-environment.prod.ts and 
-environment.ts 
-to: 'https://ec2-stage.shlomi.com/api'
-
-create distribution
-origin1-> select s3 bucket -> use website endpoint -> caching disabled 
-alternate domain: ec2-stage.shlomi.com -> custom ssl : request certificate
-fully qualified name:  shlomi.com , *.shlomi.com 
-validate with dns 
-cname (give name) ec2-stage.shlomi.com and copy cloudfront distribution url
-hosted zones-> domain -> create record ->
-
-origin2->
-http only -> 8080-> origin = ec2-raw.shlomi.com => choose all allowed http methods
-alternate domain name-> ec2-stage.shlomi.com
-Custom SSL certificate - optional -> shlomi.com
-
-behaviours: 
-api/* -> allowed methods all -> caching all 
-* -> leave default
-
-
-
-TERMINATE THE MACHINE IF YOU WANT... 
-
-
-## ECS
-
-### RDS
-
-create a database.
-publicly accesible   , master user: admin, masterpassword: Unix11!! 
-after created goto inboud rules and add "alltrafic"
-
-```
-
-create database students_stage_ecs;
-CREATE USER 'students_staging_ecs'@'%' IDENTIFIED BY 'students_staging_ecs';
-GRANT all PRIVILEGES on students_stage_ecs to 'students_staging_ecs'@'%';
-GRANT all PRIVILEGES on students_stage_ecs.* to 'students_staging_ecs'@'%';
-
-create database students_stage_eks;
-CREATE USER 'students_staging_eks'@'%' IDENTIFIED BY 'students_staging_eks';
-GRANT all PRIVILEGES on students_stage_eks to 'students_staging_eks'@'%';
-GRANT all PRIVILEGES on students_stage_eks.* to 'students_staging_eks'@'%';
-
-
-```
-
-
-### AIM
-go to AIM and create a user with programatic access and console sign in (admin credentials)
-```
-accountid = 
-access_key=
-secret_key=
-username=academy
-password=Unix11!@
-```
-
-
-### GITLAB 
-create account 
-import https://github.com/handson-academy/ops-basic-spring.git 
-create branch ecs
-
-### GITLAB variables
-
-
-on gitlab, backend service. 
-goto: settings -> ci/cd 
-expand variables, update: (unprotect the vars)
-```
-AWS_ACCESS_KEY_ID=
-AWS_DEFAULT_REGION=eu-north-1
-AWS_SECRET_ACCESS_KEY=
-CI_AWS_ECS_CLUSTER=ecs-stage-cluster
-CI_AWS_ECS_SERVICE=ecs-stage-service
-```
-
-
-### Parameter store
-```
-students_staging_ecs=jdbc:mysql://database-2.cmyyngkp9f7o.eu-north-1.rds.amazonaws.com:3306/students_stage_ecs
-students_staging_ecs_user=students_staging_ecs
-students_staging_ecs_password=students_staging_ecs
-students_staging_eks=jdbc:mysql://database-2.cmyyngkp9f7o.eu-north-1.rds.amazonaws.com:3306/students_stage_eks
-students_staging_eks_user=students_staging_eks
-students_staging_eks_password=students_staging_eks
-```
-### ECR
-create an ECR, call it students-ecs
-
-### automation files
-ci-settings.xml
-```
-<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
-  <servers>
-    <server>
-      <id>gitlab-maven</id>
-      <configuration>
-        <httpHeaders>
-          <property>
-            <name>Job-Token</name>
-            <value>${CI_JOB_TOKEN}</value>
-          </property>
-        </httpHeaders>
-      </configuration>
-    </server>
-  </servers>
-</settings>
-```
-.gitlab-ci.yml
-```
-variables:
-  DOCKER_REGISTRY: [ecr url - no /]
-  AWS_DEFAULT_REGION: eu-north-1
-  APP_NAME: students-ecs
-  DOCKER_HOST: tcp://docker:2375
-
-publish:
-  image: 
-    name: maven:3.8.1-openjdk-11
-    entrypoint: [""]
-  services:
-    - docker:dind
-  before_script:
-    - apt-get update
-    - apt-get install -y python3-pip
-    - pip3 install awscli
-    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws configure set region $AWS_DEFAULT_REGION
-    - export DB_URL=$(aws ssm get-parameter --name "students_staging_ecs" --query "Parameter.Value" --output text)
-    - echo $DB_URL
-    - export DB_PASSWORD=$(aws ssm get-parameter --name "students_staging_ecs_password" --query "Parameter.Value" --output text)
-    - echo $DB_PASSWORD
-    - export DB_USER=$(aws ssm get-parameter --name "students_staging_ecs_user" --query "Parameter.Value" --output text)
-    - echo $DB_USER
-    - sed -i "s#spring.datasource.url=.*#spring.datasource.url=${DB_URL}#g"  src/main/resources/application.properties
-    - sed -i "s#spring.datasource.username=.*#spring.datasource.username=${DB_USER}#g"  src/main/resources/application.properties
-    - sed -i "s#spring.datasource.password=.*#spring.datasource.password=${DB_PASSWORD}#g"  src/main/resources/application.properties
-    - cat src/main/resources/application.properties
-    - apt-get update
-    - apt-get install -y curl
-    - curl -fsSL https://get.docker.com | sh
-    - aws --version
-    - docker --version
-    - mvn --version
-  script:
-    - mvn clean install
-    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$APP_NAME:latest . 
-    - docker push $DOCKER_REGISTRY/$APP_NAME:latest  
-
-
-```
-
-
-### ECS
-create taskdefinition ->  ecs-task-definition 
-containername ->student-ecs-container
-imageuri-> copy from ecr table
-container port-> 8080 
-cpu - 1, memory- 4 
-configure healthcheck:  CMD-SHELL, curl -f http://localhost:8080/actuator/health 
-
-
-create cluster: ecs-stage-cluster 
-create a service: 
-fargate-> service-> family=ecs-task-definition->servicename = ecs-stage-service 
-
-
-load balancing -> create applicaiton load balancer -> springboot-lb -> port 8080 
-create a target group->  students-ecs-tg-> healthcheck:  /actuator/health -> grace 120 sec 
-
-
-when the task goes up we can test by ip:8080/swagger-ui.html
-
-### ADD ECS DEPLOY to GITLAB
-add to .gitlab-ci.yml 
-```
-deploy:
-  image: 
-    name: docker:19.03.10
-    entrypoint: [""]
-  services:
-    - docker:dind
-  before_script:
-    - apk add --no-cache curl jq python py-pip
-    - pip install awscli
-    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws configure set region $AWS_DEFAULT_REGION
-    - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $DOCKER_REGISTRY
-  stage: deploy
-  script:
-    - echo $REPOSITORY_URL:$IMAGE_TAG 
-    - echo "Updating the service..."
-    - aws ecs update-service --region "${AWS_DEFAULT_REGION}" --cluster "${CI_AWS_ECS_CLUSTER}" --service "${CI_AWS_ECS_SERVICE}"  --force-new-deployment
-
-```
-
-### front repository:
-gitlab import https://github.com/handson-academy/ops-basic-angular.git 
-create branch ecs 
-create a public s3 bucket: ecs-stage.files.shlomi.com   (enable static web hosting)
-in permissions:
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicRead",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::ecs-stage.files.shlomi.com/*"
-        }
-    ]
-}
-```
-
-### GITLAB front:
-env variable 
-```
-BACKEND_URL_ECS -> https:\/\/ecs.shlomi.com\/api
-AWS_ACCESS_KEY_ID 
-AWS_SECRET_ACCESS_KEY 
-```
-
-ci-settings.xml
-```
-<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
-  <servers>
-    <server>
-      <id>gitlab-maven</id>
-      <configuration>
-        <httpHeaders>
-          <property>
-            <name>Job-Token</name>
-            <value>${CI_JOB_TOKEN}</value>
-          </property>
-        </httpHeaders>
-      </configuration>
-    </server>
-  </servers>
-</settings>
-```
-
-.gitlab-ci.yml
-```
-build stage:  
-   image: doctrine/nodejs-aws-cli:v10.19
-   stage: build  
-   only:    
-      - ecs  
-   script:
-      - echo $BACKEND_URL_ECS
-      - sed -i "s/backend_url/'$BACKEND_URL_ECS'/" src/environments/environment.ts
-      - sed -i "s/backend_url/'$BACKEND_URL_ECS'/" src/environments/environment.prod.ts    
-      - cat src/environments/environment.ts
-      - cat src/environments/environment.prod.ts
-      - npm install --save --legacy-peer-deps    
-      # Build App    
-      - npm run build 
-   artifacts:    
-      paths:      
-         # Build folder      
-         - dist/    
-      expire_in: 1 hour
-
-deploy stage:  
-   image: python:latest  
-   stage: deploy  
-   only:    
-      - ecs  
-   script:    
-      - pip install awscli    
-      - aws s3 sync ./dist/webapp/ s3://ecs-stage.files.shlomi.com   
-```
-### Cloudfront
-create distribution
-origin1-> select s3 bucket -> use website endpoint -> caching disabled 
-alternate domain: ecs.shlomi.com
-cname (give name) ecs.shlomi.com and copy cloudfront distribution url
-hosted zones-> domain -> create record ->
-
-origin2->
-http only ->  springboot-lb -> 8080->  choose all allowed http methods
-alternate domain name-> ecs.shlomi.com
-
-behaviours: 
-api/* -> allowed methods all -> caching all 
-* -> leave default
-
-cname (give name) ecs.shlomi.com and copy cloudfront distribution url
-
-
-
-## EKS
-https://eksworkshop.com
-### Cloud 9 
-create a cloud 9 computer call it students
-
-### INSTALL KUBERNETES
-
-kubectl install
-```
-sudo curl --silent --location -o /usr/local/bin/kubectl \
-   https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.5/2022-01-21/bin/linux/amd64/kubectl
-
-sudo chmod +x /usr/local/bin/kubectl
-```
-
-update aws cli
-```
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-```
-install jq
-```
-sudo yum -y install jq gettext bash-completion moreutils
-echo 'yq() {
-  docker run --rm -i -v "${PWD}":/workdir mikefarah/yq "$@"
-}' | tee -a ~/.bashrc && source ~/.bashrc
-```
-kubectl bash completion
-```
-kubectl completion bash >>  ~/.bash_completion
-. /etc/profile.d/bash_completion.sh
-. ~/.bash_completion
-```
-
-verify commands are in path:
-```
-for command in kubectl jq envsubst aws
-  do
-    which $command &>/dev/null && echo "$command in path" || echo "$command NOT FOUND"
-  done
-```
-aws load balancer control version
-```
-echo 'export LBC_VERSION="v2.4.1"' >>  ~/.bash_profile
-echo 'export LBC_CHART_VERSION="1.4.1"' >>  ~/.bash_profile
-.  ~/.bash_profile
-```
-
-create role for the computer: 
-https://console.aws.amazon.com/iam/home#/roles$new?step=review&commonUseCase=EC2%2BEC2&selectedUseCase=EC2&policies=arn:aws:iam::aws:policy%2FAdministratorAccess&roleName=eks-admin
-
-next next
-turn off credential managment in settings icone -> aws settings -> turn off temporary credentials 
-go to top right -> manage ec2 instance -> actions -> security -> modify aim role -> select eks-admin
-
-
-security
-```
-aws kms create-alias --alias-name alias/eks --target-key-id $(aws kms create-key --query KeyMetadata.Arn --output text)
-export MASTER_ARN=$(aws kms describe-key --key-id alias/eks --query KeyMetadata.Arn --output text)
-echo "export MASTER_ARN=${MASTER_ARN}" | tee -a ~/.bash_profile
-```
-
-### install eks-ctl
-```
-
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-
-sudo mv -v /tmp/eksctl /usr/local/bin
-
-eksctl version
-
-eksctl completion bash >> ~/.bash_completion
-. /etc/profile.d/bash_completion.sh
-. ~/.bash_completion
-
-export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
-export AWS_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
-export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
-
-test -n "$AWS_REGION" && echo AWS_REGION is "$AWS_REGION" || echo AWS_REGION is not set
-
-echo "export ACCOUNT_ID=${ACCOUNT_ID}" | tee -a ~/.bash_profile
-echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
-echo "export AZS=(${AZS[@]})" | tee -a ~/.bash_profile
-aws configure set default.region ${AWS_REGION}
-aws configure get default.region
-
-cat << EOF > eks.yaml
 ---
-apiVersion: eksctl.io/v1alpha5
-kind: ClusterConfig
 
-metadata:
-  name: eks-students
-  region: ${AWS_REGION}
-  version: "1.25"
+## 🗺️ System Architecture
 
-availabilityZones: ["${AZS[0]}", "${AZS[1]}"]
+The following diagram illustrates the complete system architecture, demonstrating how frontend and backend services are securely routed, hosted, and deployed:
 
-managedNodeGroups:
-- name: nodegroup
-  desiredCapacity: 2
-  instanceType: t3.medium
-  ssh:
-    enableSsm: true
+![EC2 System Architecture](assets/architecture.png)
 
-# To enable all of the control plane logs, uncomment below:
-# cloudWatch:
-#  clusterLogging:
-#    enableTypes: ["*"]
+<details>
+<summary>📊 Click to view detailed logical architecture (Mermaid Diagram)</summary>
 
-secretsEncryption:
-  keyARN: ${MASTER_ARN}
-EOF
-
-
-eksctl create cluster -f eks.yaml
-```
-
-
-### MANUAL TEST
-```
-git clone https://github.com/handson-academy/ops-basic-spring
-
-manually copy the templates and replace values
-deployment.yaml
-image from ecr
-
-service.yaml:
-service:
-  type: LoadBalancer
-  port: 8081
-
-
-kubectl apply -f deployment.yaml 
-kubectl get deployment
-kubectl get pods
-
-kubectl apply -f service.yaml
-kubectl get service
-kubectl logs [podid]
-kubectl exec -it [podid] -- /bin/bash
-kubectl describe service springboot-service
-kubectl get service springboot-service -o yaml
-kubectl scale deployment   springboot-deployment   --replicas=1
-kubectl delete -f deployment.yaml 
-kubectl delete -f service.yaml 
-```
-
-### HELM TEST
-```
-rm -rf ops-basic-spring
-git clone https://github.com/handson-academy/ops-basic-spring
-
-curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
-chmod 700 get_helm.sh
-./get_helm.sh
-
-update ecr in values.yaml
-
-helm upgrade -i springboot springboot/ --values springboot/values.yaml
-helm list
-
-go to https://artifacthub.io/packages/helm/groundhog2k/postgres
-
-helm repo add groundhog2k  https://groundhog2k.github.io/helm-charts/
-helm repo list
-helm search repo postgres
-helm show values groundhog2k/postgres > postgres-values.yaml
-helm install my-postgres groundhog2k/postgres -f postgres-values.yaml
-update the database, user and password
-
-helm list
-kubectl get pods
-
-```
-### allow role for user academy
-go to IAM->roles-> eks-admin->trust relationships -> edit trust policies and add
-```
-        		{
-			"Effect": "Allow",
-			"Principal": {
-				"AWS": "arn:aws:iam::304303674048:user/academy"
-			},
-			"Action": "sts:AssumeRole"
-		}
-```
-### connect to cluster
-install kubectl -> https://kubernetes.io/docs/tasks/tools/
-install aws cli -> https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-add key and secret key via aws configure 
-aws eks update-kubeconfig --name eks-students --region eu-north-1  --role-arn arn:aws:iam::304303674048:role/eks-admin 
-install and run lens https://k8slens.dev/
-
-### delete helms
-```
-helm delete springboot
-helm delete my-postgres
-https://phoenixnap.com/kb/helm-commands-cheat-sheet
-```
-### EKS ECR 
-create ecr and call it students_eks
-
-### EKS auto deploy
-in gitlab go to eks branch -> springboot-> values.yaml put the ecr adress
-
-ci-settings.xml
-```
-<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
-  <servers>
-    <server>
-      <id>gitlab-maven</id>
-      <configuration>
-        <httpHeaders>
-          <property>
-            <name>Job-Token</name>
-            <value>${CI_JOB_TOKEN}</value>
-          </property>
-        </httpHeaders>
-      </configuration>
-    </server>
-  </servers>
-</settings>
-```
-
-create gitlab-ci.yaml
-```
-variables:
-  DOCKER_REGISTRY: [eks-ecr no /]
-  AWS_DEFAULT_REGION: eu-north-1
-  APP_NAME: students_eks
-  DOCKER_HOST: tcp://docker:2375
-  EKS_ROLE: [eks-admin urn]
-
-publish:
-  image: 
-    name: maven:3.8.1-openjdk-11
-    entrypoint: [""]
-  services:
-    - docker:dind
-  before_script:
-    - apt-get update
-    - apt-get install -y python3-pip
-    - pip3 install awscli
-    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws configure set region $AWS_DEFAULT_REGION
-    - export DB_URL=$(aws ssm get-parameter --name "students_staging_eks" --query "Parameter.Value" --output text)
-    - echo $DB_URL
-    - export DB_PASSWORD=$(aws ssm get-parameter --name "students_staging_eks_password" --query "Parameter.Value" --output text)
-    - echo $DB_PASSWORD
-    - export DB_USER=$(aws ssm get-parameter --name "students_staging_eks_user" --query "Parameter.Value" --output text)
-    - echo $DB_USER
-    - sed -i "s#spring.datasource.url=.*#spring.datasource.url=${DB_URL}#g"  src/main/resources/application.properties
-    - sed -i "s#spring.datasource.username=.*#spring.datasource.username=${DB_USER}#g"  src/main/resources/application.properties
-    - sed -i "s#spring.datasource.password=.*#spring.datasource.password=${DB_PASSWORD}#g"  src/main/resources/application.properties
-    - cat src/main/resources/application.properties
-    - apt-get update
-    - apt-get install -y curl
-    - curl -fsSL https://get.docker.com | sh
-    - aws --version
-    - docker --version
-    - mvn --version
-
-  script:
-    - mvn clean install
-    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID . 
-    - docker push $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID  
-
-deploy_to_eks:
-  stage: deploy
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-  before_script:
-    - export KUBECTL_VERSION=v1.25
-    - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.25.2/2021-07-05/bin/linux/amd64/kubectl
-    - chmod +x ./kubectl
-    - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-    - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
-    - chmod 700 get_helm.sh
-    - ./get_helm.sh
-    - aws --version
-    - aws sts assume-role --role-arn "$EKS_ROLE" --role-session-name AWSCLI-Session
-    - aws eks update-kubeconfig --name eks-students --region $AWS_DEFAULT_REGION --role-arn $EKS_ROLE
-    - aws sts get-caller-identity
+```mermaid
+graph TD
+    Route53["🗺️ Route 53<br>ec2-stage.shlomi.com"] --> CF["☁️ Cloudfront"]
     
- 
-  script:
-    - sed -i "s/latest/$CI_PIPELINE_IID/" springboot/values.yaml
-    - helm upgrade -i springboot springboot/ --values springboot/values.yaml
+    CF -->|"/api/*"| ARecord["🔗 A-record (ec2-raw)"]
+    CF -->|"*"| S3["🪣 Static files S3 Bucket"]
+    
+    ARecord --> AppServer
+    
+    subgraph EC2["💻 EC2 - server"]
+        MySQL["🗄️ mysql<br>(Port 3306)"]
+        AppServer["☕ appserver<br>(Port 8080)"]
+        
+        AppServer -->|JDBC Connection| MySQL
+    end
+    
+    %% Exposing ports outside the boundary
+    MySQL -.->|Exposed| Port3306["Port 3306"]
+    AppServer -.->|Exposed| Port8080["Port 8080"]
+```
+</details>
 
+---
+
+## 🧠 Key Architectural & Engineering Decisions
+
+While this setup may seem straightforward at first glance, the architecture implements several production-grade design patterns that demonstrate industry-standard DevOps and cloud architecture principles:
+
+### 1. Unified Single-Entry Point (CORS & Security Optimization)
+* **Problem**: Decoupled full-stack apps (frontend on S3 and API on EC2) usually require configuring Cross-Origin Resource Sharing (CORS) on the backend, introducing additional HTTP `OPTIONS` preflight request latency.
+* **Solution**: By routing both the S3 frontend origin (`*`) and backend EC2 API origin (`/api/*`) through a single **AWS CloudFront** distribution, they share the exact same domain name (`ec2-stage.shlomi.com`). This completely eliminates CORS preflight latency and improves security by keeping the actual EC2 instance endpoint hidden from public browsers.
+
+### 2. Edge Caching & Decoupled Static Hosting
+* **Strategy**: Serving frontend Angular builds directly from **Amazon S3 website hosting** instead of the EC2 virtual machine.
+* **Benefit**: Offloads all static web asset delivery (HTML, JS, CSS, images) to AWS's global edge network (CloudFront). The EC2 instance CPU/Memory is entirely dedicated to processing dynamic database queries and API business logic on port `8080`, vastly improving system scalability and reducing compute costs.
+
+### 3. Database Isolation & Security Group Hardening
+* **Implementation**: The MySQL database container is isolated within the internal Docker Compose bridge network on port `3306`.
+* **Benefit**: It communicates directly with the Spring Boot container via high-speed internal DNS, with no port forwarding or direct public access exposed to the internet. Access to the EC2 API on port `8080` is restricted through CloudFront origins, preventing direct brute-force attacks on the VM.
+
+### 4. High-Fidelity Local Development (Cloud Parity)
+* **Philosophy**: Emulating Route 53 routing, ACM certificates, S3 bucket endpoints, and EC2 provisioning locally using **LocalStack**.
+* **Benefit**: Enables testing full cloud infrastructure deployments locally in seconds. This eliminates standard cloud cost overhead during development, supports offline testing, and ensures 100% parity between local test environments and live AWS environments.
+
+---
+
+## 🌟 Key DevOps Engineering Pillars Demonstrated
+
+1. **Infrastructure as Code (IaC)**: Fully automated infrastructure provisioning using **Terraform**, managing VPC, Subnets, Internet Gateways, Security Groups, IAM roles, S3 buckets, Route53, EC2, and CloudFront.
+2. **Cloud Parity & Emulation**: Utilizes **LocalStack** and `tflocal` to run, test, and debug the entire AWS infrastructure locally, reducing cloud spend and shortening feedback loops.
+3. **Containerization & Orchestration**: High-performance multi-container setup running via **Docker Compose**, separating the Java backend API and MySQL database.
+4. **Automated CI/CD (GitHub Actions)**:
+   - **Backend Pipeline**: Automatic compilation (Maven), Docker image building, publishing to Docker Hub, and zero-downtime deployment to AWS EC2 via SSH.
+   - **Frontend Pipeline**: Automated compilation (Angular), deployment to S3 static hosting, and asset invalidation.
+5. **Advanced Content Delivery & CDN Routing**: A single-entry point architecture using **AWS CloudFront** mapping:
+   - `/api/*` requests dynamically forwarded to the Spring Boot REST API on EC2.
+   - All other static assets served instantly via **Amazon S3** edge locations.
+   - Custom domains and SSL certificates via **Route 53**, ACM, and GoDaddy nameserver integrations.
+
+---
+
+## 🤖 Built-in Automation Scripts
+
+To streamline local development, infrastructure management, and deployments, the project includes pre-configured automation bash scripts under the `scripts/` directory:
+
+### 1. Infrastructure Management (`scripts/infra.sh`)
+Handles the complete lifecycle of your LocalStack environment and Terraform state.
+* **Spin up local AWS mock environment**:
+  ```bash
+  ./scripts/infra.sh start
+  ```
+* **Teardown local mock environment**:
+  ```bash
+  ./scripts/infra.sh stop
+  ```
+* **SSH connection to mock EC2 (as root or testuser)**:
+  ```bash
+  ./scripts/infra.sh ssh       # Connect as testuser
+  ./scripts/infra.sh ssh-root  # Connect as root
+  ```
+* **Create an encrypted SSH tunnel to forward port 5555**:
+  ```bash
+  ./scripts/infra.sh tunnel
+  ```
+
+### 2. Backend Orchestration (`scripts/build-run.sh`)
+Builds the Spring Boot Java API, generates the Docker container image, and spins up the database and backend services using Docker Compose with a single command **inside the EC2 instance**:
+```bash
+# Run inside the EC2 container/machine after cloning the repo:
+./scripts/build-run.sh
 ```
 
-### FRONT AUTOMATION
-create a public s3 bucket: eks-stage.shlomi.com (enable static web hosting) 
-
-in permissions:
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicRead",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::eks-stage.shlomi.com/*"
-        }
-    ]
-}
+### 3. Local S3 Frontend Deployment (`scripts/deploy-frontend-local.sh`)
+Automates building the Angular frontend and syncing the build artifacts to the local mock S3 bucket inside LocalStack:
+```bash
+./scripts/deploy-frontend-local.sh
 ```
 
-### EKS S3 Bucket:
-create a public s3 bucket: eks-staging.shlomi.com   (enable static web hosting)
-in permissions:
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicRead",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::eks-staging.shlomi.com/*"
-        }
-    ]
-}
-```
-### GITLAB front automation
-create branch eks 
-env variable 
-```
-BACKEND_URL_EKS -> https:\/\/eks.shlomi.com\/api
+---
+
+## 📂 Project Structure
+
+```directory
+├── .github/
+│   └── workflows/
+│       └── build.yml      # GitHub Actions CI/CD for Backend Deployment
+├── scripts/
+│   ├── infra.sh           # LocalStack and Terraform management automation
+│   ├── build-run.sh       # Compiles, builds Docker image, starts compose
+│   └── deploy-frontend-local.sh  # Deploys Angular frontend to S3 locally
+├── src/                   # Spring Boot Application source code
+├── Dockerfile             # Docker recipe for Java API compilation and execution
+├── docker-compose.yml     # Compose file defining server & database services
+├── ec2.tf                 # VPC, Security Groups, EC2 instance, testuser automation
+├── s3.tf                  # Static S3 bucket configuration, public read policy
+├── iam.tf                 # IAM User and policies for static deployment
+├── cloudfront.tf          # Route53 zones/records, ACM, CloudFront distribution routing
+├── pom.xml                # Maven project definition
+└── README.md              # This README
 ```
 
-.gitlab-ci.yml
+---
+
+## 💻 Local Emulation & Development (LocalStack)
+
+This project is built to run 100% locally using LocalStack.
+
+### 1. Prerequisites
+Ensure you have the following installed and configured on your machine (WSL / Local PC):
+* Docker & Docker Compose
+* LocalStack CLI (`pip install localstack`)
+* Python Virtual Environment with LocalStack helper wrappers (`tflocal` and `awslocal`):
+  ```bash
+  python3 -m venv ~/venv 
+  source ~/venv/bin/activate
+  python3 -m pip install terraform-local awscli-local
+  ```
+* **Verify Local wrappers installation**:
+  ```bash
+  tflocal --version
+  awslocal --version
+  ```
+* **Host SSH Key (Required for mock EC2 GitHub cloning)**: A valid SSH key pair (preferably `~/.ssh/id_ed25519`) must exist on your host machine and be added to your GitHub account *before* provisioning.
+
+### 2. Generate SSH Key on Host (WSL / Local PC)
+Before launching the infrastructure, you must ensure you have an SSH key generated on your host machine so that Terraform can copy it to the container. If you do not have one, run:
+```bash
+# Generate the key pair on your host machine (WSL or Local PC)
+ssh-keygen -t ed25519 -C "[EMAIL_ADDRESS]"
+
+# View and copy the public key
+cat ~/.ssh/id_ed25519.pub
+
+# Add the public key to your GitHub account:
+# Go to Settings -> SSH and GPG keys -> New SSH key, and paste the output.
 ```
-build stage:  
-   image: doctrine/nodejs-aws-cli:v10.19
-   stage: build  
-   only:    
-      - eks  
-   script:
-      - echo $BACKEND_URL_EKS
-      - sed -i "s/backend_url/'$BACKEND_URL_EKS'/" src/environments/environment.ts
-      - sed -i "s/backend_url/'$BACKEND_URL_EKS'/" src/environments/environment.prod.ts    
-      - cat src/environments/environment.ts
-      - cat src/environments/environment.prod.ts
-      - npm install --save --legacy-peer-deps    
-      # Build App    
-      - npm run build 
-   artifacts:    
-      paths:      
-         # Build folder      
-         - dist/    
-      expire_in: 1 hour
 
-deploy stage:  
-   image: python:latest  
-   stage: deploy  
-   only:    
-      - eks  
-   script:    
-      - pip install awscli    
-      - aws s3 sync ./dist/webapp/ s3://eks-staging.shlomi.com   
+### 3. Launch LocalStack
+Start the local AWS cloud engine in the background:
+```bash
+localstack start -d
 ```
-### Cloudfront
-create distribution
-origin1-> select s3 bucket -> use website endpoint -> caching disabled 
-alternate domain: eks.shlomi.com
-cname (give name) eks.shlomi.com and copy cloudfront distribution url
-hosted zones-> domain -> create record ->
 
-origin2->
-http only ->  ekslb -> 8081->  choose all allowed http methods
-alternate domain name-> eks.shlomi.com
+### 4. Provision Infrastructure Locally
+Use `tflocal` to initialize and deploy the infrastructure to your local mock environment:
+```bash
+tflocal init
+tflocal apply -auto-approve
+```
+> [!NOTE]
+> Standard Terraform outputs the generated private SSH key (`ec2_key_pair.pem`) to the local directory with `0400` read-only permissions automatically.
+> To destroy the local mock environment later, run:
+> ```bash
+> tflocal destroy -auto-approve
+> ```
 
-behaviours: 
-api/* -> allowed methods all -> caching all 
-* -> leave default
+### 5. Connect to Local Mock EC2
+To log into the simulated Ubuntu machine created inside LocalStack:
+```bash
+# Secure the key
+sudo cp ec2_key_pair.pem ~
+sudo chmod 400 ~/ec2_key_pair.pem
 
-cname (give name) eks.shlomi.com and copy cloudfront distribution url
+# SSH into the containerized machine
+ssh -i ~/ec2_key_pair.pem testuser@localhost
+# Or as root:
+ssh -i ~/ec2_key_pair.pem root@localhost
+```
 
-## CLEANUP
+### 6. Verify Tool Installations (Verification)
+Run the following commands inside the EC2 instance to ensure all tools have been provisioned correctly:
+```bash
+docker --version
+docker-compose --version
+git --version
+python3 --version
+mvn -version
+yq --version
+```
 
-delete ecs-stage-cluster
-eksctl delete  cluster -f eks.yaml  
-terminate the ec2 instance
-delete load balancers
-delete RDS
+### 7. GitHub Authentication & Project Setup (Inside EC2)
+Once logged into the EC2 instance and verified, you need to clone your repository to build and deploy the application.
+
+1. **Verify SSH Key and Connection**:
+   * **For Local Emulation (LocalStack)**:
+     Since the Terraform `copy_ssh_keys` resource automatically copied your host's existing key into the mock EC2 container during step 4, you can verify it and test your connection to GitHub directly:
+     ```bash
+     ls -la ~/.ssh/
+     ssh -T git@github.com
+     ```
+   * **For Production AWS EC2 (Real Cloud)**:
+     If you are deploying on a real AWS cloud instance without automated copy, generate the key pair inside the EC2 instance and register it with GitHub:
+     ```bash
+     ssh-keygen -t ed25519 -C "shlomi.sharbet@gmail.com"
+     cat ~/.ssh/id_ed25519.pub
+     # Add the output to GitHub Settings -> SSH and GPG keys.
+     ```
+
+2. **Clone and Configure**:
+   Clone the repository and set up your git configurations:
+   ```bash
+   git clone git@github.com:shlomi-sharbet/dops-basic-spring-ec2-back.git
+   cd dops-basic-spring-ec2-back
+   git config --global user.email "shlomi.sharbet@gmail.com"
+   ```
+
+---
+
+## 🐳 Application Containerization (Docker Setup)
+
+This phase compiles the Java Backend and orchestrates the containers. You can either use the automated script or run the steps manually inside the EC2 instance.
+
+### Option A: Automated Build & Run (Recommended)
+Expose execute permissions and run the orchestration script inside the `dops-basic-spring-ec2-back` directory:
+```bash
+chmod +x ./scripts/build-run.sh
+./scripts/build-run.sh
+```
+
+### Option B: Manual Steps
+If you prefer running commands individually, follow these steps:
+
+#### 1. Maven Compilation
+Build the production Spring Boot JAR file:
+```bash
+mvn clean install
+# Verifies that basic-0.0.1-SNAPSHOT.jar is generated under /target
+```
+
+### 2. Manual Docker Build & Publish
+```bash
+# Login to your registry
+# create token: https://app.docker.com/accounts/shlomisharbat/settings/personal-access-tokens
+docker login -u <DOCKERHUB_USERNAME>
+
+# Build the API image
+docker build . -t backend
+
+# Tag and push
+docker tag backend <DOCKERHUB_USERNAME>/backend:latest
+docker push <DOCKERHUB_USERNAME>/backend:latest
+```
+
+### 3. Run Multi-Container Services
+Run the Spring Boot Backend alongside a MySQL database inside the EC2 environment:
+```bash
+docker-compose up -d
+```
+* **Swagger API Documentation UI**: Accessible at `http://localhost:8080/swagger-ui.html`
+* **MySQL Database**: Running on port `3306` inside the isolated network.
+
+---
+
+## 🐙 CI/CD Pipelines (GitHub Actions)
+
+### 1. Backend CI/CD Workflow (`.github/workflows/build.yml`)
+Triggers on every push to the `master` branch:
+1. **Build**: Compiles and packages the Java code using Maven with JDK 11.
+2. **Dockerize**: Builds the Docker image with a dynamic version tag: `v1.0.${{ github.run_number }}`.
+3. **Registry Push**: Uploads the image to Docker Hub.
+4. **AWS Deployment (CD)**: Connects securely via SSH to the AWS EC2 instance, updates the image tag in `docker-compose.yml`, pulls the latest build, and performs a graceful container restart (`docker-compose down && docker-compose up -d`).
+
+### 2. Frontend CI/CD Workflow (Angular Deploy to S3)
+Triggers on every push to the `main` branch of the frontend repository:
+1. **Compilation**: Installs Node dependencies and builds the optimized Angular production bundle (`npm run build --prod`).
+2. **S3 Synchronization**: Uses the AWS CLI to sync assets to S3 and purge deleted files:
+   ```bash
+   aws s3 sync ./dist/webapp s3://${{ env.S3_BUCKET_NAME }} --delete
+   ```
+
+### 3. Self-Hosted GitHub Actions Runner
+To build and deploy both the backend and frontend applications, the workflows utilize a **Self-Hosted Runner** (`runs-on: self-hosted`). This ensures that the builds execute directly on the target host/runner environment (e.g., your local workspace or deployment server), allowing secure, local build execution and integration.
+
+To start the registered self-hosted runner:
+```bash
+# Navigate to the runner installation directory and start the agent
+cd ~/actions-runner   # (e.g., /home/shlomi/actions-runner)
+./run.sh
+```
+
+### 4. Configuring Repository Secrets
+To run these automated pipelines, configure the following secrets in GitHub under `Settings -> Secrets and variables -> Actions`:
+
+| Secret Name | Description | Example / Mock Value |
+| :--- | :--- | :--- |
+| `DOCKERHUB_USERNAME` | Your Docker Hub account | `shlomisharbat` |
+| `DOCKERHUB_TOKEN` | Personal Access Token from Docker Hub | `dckr_pat_...` |
+| `EC2_INSTANCE_PUBLIC_IP` | Public IP of your EC2 Web Server | `13.50.xxx.xxx` (or `localhost` for local testing) |
+| `SSH_KEY` | Content of `ec2_key_pair.pem` Private Key | `-----BEGIN RSA PRIVATE KEY----- ...` |
+| `AWS_ACCESS_KEY_ID` | Access key of deployer IAM user | `AKIA...` |
+| `AWS_SECRET_ACCESS_KEY` | Secret key of deployer IAM user | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY` |
+| `AWS_REGION` | AWS target deployment region | `us-east-1` |
+| `S3_BUCKET_NAME` | S3 static hosting bucket name | `shlomi.backend.students` |
+
+---
+
+## ⚡ Professional Tips & Techniques
+
+### Pro-Tip: Secure Local Port Access via SSH Tunneling
+When testing endpoints inside a remote EC2 server with closed ports, **do not open ports to the entire internet** in your Security Group! Instead, use **SSH Port Forwarding (Tunneling)**. 
+
+Establish a secure encrypted tunnel that routes local port `5555` directly to port `5555` inside the EC2 instance over port 22:
+```bash
+ssh -i ~/ec2_key_pair.pem -L 5555:localhost:5555 root@localhost
+```
+Now, if you launch a test web server on the remote instance (e.g., `python3 -m http.server 5555`), you can access it securely from your local browser at `http://localhost:5555`!
+
+---
+
+## ⚙️ Advanced Production Configuration: Routing & Domain Setup (IaC)
+
+This advanced routing and CDN setup is **fully automated as Infrastructure as Code (IaC)** inside [cloudfront.tf](cloudfront.tf). When you run `tflocal apply` or `terraform apply`, Terraform provisions and configures the following resources automatically:
+
+1. **Route 53 Hosted Zone** (`aws_route53_zone`): Manages the DNS zone for `shlomi.com` and registers DNS records (e.g., pointing domain registrar nameservers to AWS Route 53).
+2. **ACM Certificate** (`aws_acm_certificate`): Automates requesting a wildcard SSL/TLS Certificate (`*.shlomi.com`) to allow secure HTTPS communication.
+3. **CloudFront CDN Distribution** (`aws_cloudfront_distribution`): Provisions a global CDN at `ec2-stage.shlomi.com` mapping:
+   - **S3 Frontend Origin**: Points to the S3 bucket static website endpoint.
+   - **EC2 Backend Origin**: Points to the API Backend CNAME (`ec2-raw.shlomi.com`) on port `8080`.
+   - **Cache Behaviors**:
+     - Path pattern `/api/*` routes requests dynamically to the EC2 backend.
+     - Default path pattern `*` serves static web assets directly from the S3 bucket.
+4. **DNS Records** (`aws_route53_record`): Maps `ec2-raw.shlomi.com` to the EC2 host and `ec2-stage.shlomi.com` directly to the CloudFront distribution domain.
 
