@@ -44,6 +44,7 @@ jobs:
               git clone git@github.com:shlomi-sharbet/ops-basic-spring-ec2-back.git /root/ops-basic-spring-ec2-back
             fi
             cd /root/ops-basic-spring-ec2-back
+            git checkout -- .
             git pull origin master
             /usr/local/bin/docker-compose  down || true
             sed -i 's/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:.*/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:v1.0.${{ github.run_number }}/g' /root/ops-basic-spring-ec2-back/docker-compose.yml
