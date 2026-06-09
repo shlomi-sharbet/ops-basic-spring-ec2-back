@@ -1,4 +1,3 @@
-
 version: "3"
 services:
   appserver:
@@ -7,16 +6,26 @@ services:
     image: shlomisharbat/backend:latest
     ports:
       - 8080:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   mysql:
     image: mysql:8.0
+    container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: Unix11
       MYSQL_DATABASE: students
       MYSQL_USER: students
       MYSQL_PASSWORD: Unix11
-    ports:
-      - 3306:3306
+    # Removed public port mapping (3306:3306) to isolate the database. 
+    # The application service communicates with MySQL using docker's internal network dns (mysql:3306).
     volumes:
       - ./mysql-data:/var/lib/mysql
     privileged: true
-
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

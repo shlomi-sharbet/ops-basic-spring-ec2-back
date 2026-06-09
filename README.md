@@ -33,13 +33,31 @@ While this setup may seem straightforward at first glance, the architecture impl
 * **Strategy**: Serving frontend Angular builds directly from **Amazon S3 website hosting** instead of the EC2 virtual machine.
 * **Benefit**: Offloads all static web asset delivery (HTML, JS, CSS, images) to AWS's global edge network (CloudFront). The EC2 instance CPU/Memory is entirely dedicated to processing dynamic database queries and API business logic on port `8080`, vastly improving system scalability and reducing compute costs.
 
-### 3. Database Isolation & Security Group Hardening
-* **Implementation**: The MySQL database container is isolated within the internal Docker Compose bridge network on port `3306`.
-* **Benefit**: It communicates directly with the Spring Boot container via high-speed internal DNS, with no port forwarding or direct public access exposed to the internet. Access to the EC2 API on port `8080` is restricted through CloudFront origins, preventing direct brute-force attacks on the VM.
+### 3. Database Isolation & Zero-Port Exposure
+* **Implementation**: The MySQL database container does not expose or forward port `3306` to the host system or the public internet. 
+* **Benefit**: It communicates directly with the Spring Boot container via Docker's high-speed internal bridge DNS, with no ports mapped outside the virtual network. This prevents external database sniffing, credential brute-forcing, and zero-day database port attacks.
 
 ### 4. High-Fidelity Local Development (Cloud Parity)
 * **Philosophy**: Emulating Route 53 routing, ACM certificates, S3 bucket endpoints, and EC2 provisioning locally using **LocalStack**.
 * **Benefit**: Enables testing full cloud infrastructure deployments locally in seconds. This eliminates standard cloud cost overhead during development, supports offline testing, and ensures 100% parity between local test environments and live AWS environments.
+
+### 5. Outbound-Only CI/CD Execution (Zero-Trust Runner Model)
+* **Strategy**: The workflows for both frontend and backend repositories run on a **Self-Hosted Runner** (`runs-on: self-hosted`) instead of standard cloud-hosted runners.
+* **Benefit**: Standard CI/CD workflows require storing highly sensitive SSH private keys (`SSH_KEY`) on third-party cloud systems and opening inbound SSH port `22` to the public internet. By hosting a local agent, the runner initiates an *outbound-only* connection (HTTPS on port 443) to GitHub to listen for work. This eliminates the need to store sensitive SSH keys on GitHub or open open firewall ports, resulting in a zero-inbound-ports network topology.
+
+### 6. Environment-Agnostic Compilation (Multi-Stage Dockerization)
+* **Strategy**: Rewriting the application's `Dockerfile` to implement a two-stage **Multi-Stage Build**.
+* **Benefit**: 
+  1. *Stage 1 (Builder)*: Uses a Maven-loaded base container to build and package the code. This guarantees that compilation is environment-agnostic; no Java JDK or Maven packages need to be pre-installed on the runner or developer's host machine.
+  2. *Stage 2 (Runner)*: Copies only the compiled artifact (`basic.jar`) into a lightweight, hardened `eclipse-temurin:11-jre-alpine` runtime image. This reduces the deployment image size by up to 80% and strips away the compiler, shell tools, and libraries, significantly reducing the attack surface.
+
+### 7. Ordered Bootstrapping & Lifecycle Management (Container Healthchecks)
+* **Strategy**: Defining a custom healthcheck command inside `docker-compose.yml` for the MySQL service using `mysqladmin ping` and pairing it with a conditional dependency (`condition: service_healthy`) on the backend service.
+* **Benefit**: Spring Boot initializes and attempts database connection within seconds of startup, whereas MySQL takes longer to fully boot and configure its tables. In standard docker configurations, this causes the API container to crash due to database connection failures. Implementing healthchecks ensures the backend container delays its initialization until the database is fully ready to accept connections.
+
+### 8. Enterprise-Grade IaC State Management (S3 Backend & DynamoDB Lock)
+* **Strategy**: Utilizing a remote AWS backend configuration for Terraform state storage coupled with state locking.
+* **Benefit**: While local testing saves the `.tfstate` locally, production workflows store the state file in a secured **Amazon S3 bucket** (with versioning enabled to roll back accidental state updates) and use a **DynamoDB table** as a state locking mechanism. This prevents race conditions and state corruption when multiple DevOps engineers or CI/CD pipelines attempt to execute infrastructure plans simultaneously.
 
 ---
 
@@ -239,12 +257,13 @@ chmod +x ./scripts/build-run.sh
 ### Option B: Manual Steps
 If you prefer running commands individually, follow these steps:
 
-#### 1. Maven Compilation
-Build the production Spring Boot JAR file:
-```bash
-mvn clean install
+> [!NOTE]
+> Thanks to our **Docker Multi-Stage Build**, you do not need to pre-install Maven or compile the Java backend on your host machine before building the Docker image. The `docker build` command handles compilation automatically inside the container.
+> If you still want to compile locally on your host for testing, running unit tests, or IDE support, you can compile manually:
+> ```bash
+> mvn clean install
 # Verifies that basic-0.0.1-SNAPSHOT.jar is generated under /target
-```
+> ```
 
 ### 2. Manual Docker Build & Publish
 ```bash
