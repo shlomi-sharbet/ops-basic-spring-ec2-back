@@ -49,8 +49,8 @@ jobs:
           port: 22
           script: |
             set -e
-            cd /root/devops-mastery-playground
+            cd /root/ops-basic-spring-ec2-back
             git pull origin master
             /usr/local/bin/docker-compose  down || true
-            sed -i 's/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:.*/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:v1.0.${{ github.run_number }}/g' /root/devops-mastery-playground/docker-compose.yml
+            sed -i 's/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:.*/image: ${{ secrets.DOCKERHUB_USERNAME }}\/backend:v1.0.${{ github.run_number }}/g' /root/ops-basic-spring-ec2-back/docker-compose.yml
             /usr/local/bin/docker-compose  up -d || true
