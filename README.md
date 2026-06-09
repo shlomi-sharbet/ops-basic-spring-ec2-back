@@ -18,30 +18,6 @@ The following diagram illustrates the complete system architecture, demonstratin
 
 ![EC2 System Architecture](assets/architecture.png)
 
-<details>
-<summary>📊 Click to view detailed logical architecture (Mermaid Diagram)</summary>
-
-```mermaid
-graph TD
-    Route53["🗺️ Route 53<br>ec2-stage.shlomi.com"] --> CF["☁️ Cloudfront"]
-    
-    CF -->|"/api/*"| ARecord["🔗 A-record (ec2-raw)"]
-    CF -->|"*"| S3["🪣 Static files S3 Bucket"]
-    
-    ARecord --> AppServer
-    
-    subgraph EC2["💻 EC2 - server"]
-        MySQL["🗄️ mysql<br>(Port 3306)"]
-        AppServer["☕ appserver<br>(Port 8080)"]
-        
-        AppServer -->|JDBC Connection| MySQL
-    end
-    
-    %% Exposing ports outside the boundary
-    MySQL -.->|Exposed| Port3306["Port 3306"]
-    AppServer -.->|Exposed| Port8080["Port 8080"]
-```
-</details>
 
 ---
 
