@@ -339,7 +339,10 @@ cd ~/actions-runner   # (e.g., /home/shlomi/actions-runner)
 ```
 
 ### 4. Configuring Repository Secrets
-To run these automated pipelines, configure the following secrets in GitHub under `Settings -> Secrets and variables -> Actions`:
+To run these automated pipelines, configure the following secrets in GitHub under `Settings -> Secrets and variables -> Actions` in their respective repositories:
+
+#### A. Backend Repository Secrets (`ops-basic-spring-ec2-back`)
+These secrets are required for compiling, dockerizing, pushing to Docker Hub, and deploying to the EC2 server:
 
 | Secret Name | Description | Example / Mock Value |
 | :--- | :--- | :--- |
@@ -347,10 +350,17 @@ To run these automated pipelines, configure the following secrets in GitHub unde
 | `DOCKERHUB_TOKEN` | Personal Access Token from Docker Hub | `dckr_pat_...` |
 | `EC2_INSTANCE_PUBLIC_IP` | Public IP of your EC2 Web Server | `13.50.xxx.xxx` (or `localhost` for local testing) |
 | `SSH_KEY` | Content of `ec2_key_pair.pem` Private Key | `-----BEGIN RSA PRIVATE KEY----- ...` |
+
+#### B. Frontend Repository Secrets
+These secrets are required for building and deploying the static Angular web application to Amazon S3 website hosting:
+
+| Secret Name | Description | Example / Mock Value |
+| :--- | :--- | :--- |
 | `AWS_ACCESS_KEY_ID` | Access key of deployer IAM user | `AKIA...` |
 | `AWS_SECRET_ACCESS_KEY` | Secret key of deployer IAM user | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY` |
 | `AWS_REGION` | AWS target deployment region | `us-east-1` |
 | `S3_BUCKET_NAME` | S3 static hosting bucket name | `shlomi.backend.students` |
+
 
 ---
 
