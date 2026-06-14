@@ -133,21 +133,23 @@ Automates building the Angular frontend and syncing the build artifacts to the l
 ```directory
 ├── .github/
 │   └── workflows/
-│       └── build.yml      # GitHub Actions CI/CD for Backend Deployment
+│       └── build.yml             # GitHub Actions CI/CD for Backend Deployment
 ├── scripts/
-│   ├── infra.sh           # LocalStack and Terraform management automation
-│   ├── build-run.sh       # Compiles, builds Docker image, starts compose
+│   ├── infra.sh                  # LocalStack and Terraform management automation
+│   ├── build-run.sh              # Compiles, builds Docker image, starts compose
 │   └── deploy-frontend-local.sh  # Deploys Angular frontend to S3 locally
-├── src/                   # Spring Boot Application source code
-├── Dockerfile             # Docker recipe for Java API compilation and execution
-├── docker-compose.yml     # Compose file defining server & database services
-├── ec2.tf                 # VPC, Security Groups, EC2 instance, testuser automation
-├── s3.tf                  # Static S3 bucket configuration, public read policy
-├── iam.tf                 # IAM User and policies for static deployment
-├── cloudfront.tf          # Route53 zones/records, ACM, CloudFront distribution routing
-├── pom.xml                # Maven project definition
-└── README.md              # This README
+├── src/                          # Spring Boot Application source code
+├── terraform/                    # Infrastructure as Code (IaC) configuration
+│   ├── ec2.tf                    # VPC, Security Groups, EC2 instance, testuser automation
+│   ├── s3.tf                     # Static S3 bucket configuration, public read policy
+│   ├── iam.tf                    # IAM User and policies for static deployment
+│   └── cloudfront.tf             # Route53 zones/records, ACM, CloudFront distribution routing
+├── Dockerfile                    # Docker recipe for Java API compilation and execution
+├── docker-compose.yml            # Compose file defining server & database services
+├── pom.xml                       # Maven project definition
+└── README.md                     # This README
 ```
+
 
 ---
 
