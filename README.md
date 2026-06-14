@@ -306,7 +306,8 @@ Run the Spring Boot Backend alongside a MySQL database inside the EC2 environmen
 docker-compose up -d
 ```
 * **Swagger API Documentation UI**: Accessible at `http://localhost:8080/swagger-ui.html`
-* **MySQL Database**: Running on port `3306` inside the isolated network.
+* **MySQL Database**: Running on port `3306` inside the isolated network (Not exposed to the host machine/public internet for security; accessible internally by the backend).
+
 
 ---
 
