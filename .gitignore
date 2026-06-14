@@ -1,0 +1,35 @@
+# Maven / Compilation
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Databases & Local Data
+mysql-data/
+
+# Logs
+*.log
+terraform.log
+
+# Terraform Local Cache/States/Keys
+.terraform/
+*.tfstate
+*.tfstate.*
+*.pem
+.terraform.lock.hcl
+
+# IDEs & Editors
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS / System Files
+Thumbs.db
+.DS_Store
+
+# Backups / Temporary files
+old_README.md

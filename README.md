@@ -200,19 +200,22 @@ cd terraform
 tflocal init
 tflocal apply -auto-approve
 ```
+
 > [!NOTE]
 > Standard Terraform outputs the generated private SSH key (`ec2_key_pair.pem`) to the `terraform/` directory with `0400` read-only permissions automatically.
+> 
 > To destroy the local mock environment later, run from the `terraform/` directory:
 > ```bash
 > tflocal destroy -auto-approve
 > ```
 
+
 ### 5. Connect to Local Mock EC2
 To log into the simulated Ubuntu machine created inside LocalStack:
 ```bash
 # Secure the key (run from the root directory, copying from the terraform/ folder)
-sudo cp terraform/ec2_key_pair.pem ~
-sudo chmod 400 ~/ec2_key_pair.pem
+cp terraform/ec2_key_pair.pem ~
+chmod 400 ~/ec2_key_pair.pem
 
 # SSH into the containerized machine
 ssh -i ~/ec2_key_pair.pem testuser@localhost
@@ -252,9 +255,9 @@ Once logged into the EC2 instance and verified, you need to clone your repositor
 2. **Clone and Configure**:
    Clone the repository and set up your git configurations:
    ```bash
-   git clone git@github.com:shlomi-sharbet/dops-basic-spring-ec2-back.git
-   cd dops-basic-spring-ec2-back
-   git config --global user.email "shlomi.sharbet@gmail.com"
+   git clone git@github.com:shlomi-sharbet/ops-basic-spring-ec2-back.git
+   cd ops-basic-spring-ec2-back
+   git config --global user.email "[EMAIL_ADDRESS]"
    ```
 
 ---
@@ -264,7 +267,7 @@ Once logged into the EC2 instance and verified, you need to clone your repositor
 This phase compiles the Java Backend and orchestrates the containers. You can either use the automated script or run the steps manually inside the EC2 instance.
 
 ### Option A: Automated Build & Run (Recommended)
-Expose execute permissions and run the orchestration script inside the `dops-basic-spring-ec2-back` directory:
+Expose execute permissions and run the orchestration script inside the `ops-basic-spring-ec2-back` directory:
 ```bash
 chmod +x ./scripts/build-run.sh
 ./scripts/build-run.sh
@@ -276,10 +279,12 @@ If you prefer running commands individually, follow these steps:
 > [!NOTE]
 > Thanks to our **Docker Multi-Stage Build**, you do not need to pre-install Maven or compile the Java backend on your host machine before building the Docker image. The `docker build` command handles compilation automatically inside the container.
 > If you still want to compile locally on your host for testing, running unit tests, or IDE support, you can compile manually:
+> 
 > ```bash
 > mvn clean install
-# Verifies that basic-0.0.1-SNAPSHOT.jar is generated under /target
+> # Verifies that basic-0.0.1-SNAPSHOT.jar is generated under /target
 > ```
+
 
 ### 2. Manual Docker Build & Publish
 ```bash

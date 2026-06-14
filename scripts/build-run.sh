@@ -5,7 +5,7 @@
 # are handled entirely inside the Docker engine, eliminating host-side Maven dependencies.
 
 echo "🐳 Step 1: Building Docker image (compilation happens inside container)..."
-docker build . -t backend
+docker build . -t shlomisharbat/backend:latest
 
 echo "🚀 Step 2: Starting services with Docker Compose..."
 docker-compose up -d
