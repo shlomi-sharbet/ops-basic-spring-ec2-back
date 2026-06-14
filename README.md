@@ -12,6 +12,19 @@ This repository implements a **Local-First development paradigm**, leveraging **
 
 ---
 
+## 🎯 Project Scope, Philosophy & Mentorship Context
+
+This repository was designed not just as a deployment playground, but as a structured **onboarding and mentorship framework** to guide a junior DevOps engineer through end-to-end infrastructure, automation, and cloud parity practices.
+
+### 💡 Why this Architecture? (Avoiding the Over-Engineering Anti-Pattern)
+In professional DevOps, success is measured by delivering the most cost-effective, reliable, and maintainable solution for the business requirements—not by building the most complex system. 
+* **Pragmatic Simplicity**: For the scope of this CRUD application, choosing a single EC2 instance behind a global **CloudFront CDN** is a deliberate, professional choice over complex orchestrators (like Kubernetes or ECS/Fargate) or load balancers.
+* **Cost & Traffic Optimization**: A single-instance architecture keeps AWS running costs minimal, while CloudFront offloads all static frontend traffic at the edge.
+* **Core DevOps Focus**: By keeping the runtime environment simple, the mentorship focus remains entirely on foundational DevOps pillars: Infrastructure as Code (IaC), secure CI/CD pipelines, clean Docker multi-stage builds, zero-trust network configurations, and local-first simulation.
+
+---
+
+
 ## 🗺️ System Architecture
 
 The following diagram illustrates the complete system architecture, demonstrating how frontend and backend services are securely routed, hosted, and deployed:
