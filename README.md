@@ -385,11 +385,11 @@ This advanced routing and CDN setup is **fully automated as Infrastructure as Co
 2. **ACM Certificate** (`aws_acm_certificate`): Automates requesting a wildcard SSL/TLS Certificate (`*.shlomi.com`) to allow secure HTTPS communication.
 3. **CloudFront CDN Distribution** (`aws_cloudfront_distribution`): Provisions a global CDN at `ec2-stage.shlomi.com` mapping:
    - **S3 Frontend Origin**: Points to the S3 bucket static website endpoint.
-   - **EC2 Backend Origin**: Points to the API Backend CNAME (`ec2-raw.shlomi.com`) on port `8080`.
+   - **EC2 Backend Origin**: Points to the API Backend CNAME (`api-raw.shlomi.com`) on port `8080`.
    - **Cache Behaviors**:
      - Path pattern `/api/*` routes requests dynamically to the EC2 backend.
      - Default path pattern `*` serves static web assets directly from the S3 bucket.
-4. **DNS Records** (`aws_route53_record`): Maps `ec2-raw.shlomi.com` to the EC2 host and `ec2-stage.shlomi.com` directly to the CloudFront distribution domain.
+4. **DNS Records** (`aws_route53_record`): Maps `api-raw.shlomi.com` to the EC2 host and `ec2-stage.shlomi.com` directly to the CloudFront distribution domain.
 
 ---
 
@@ -428,7 +428,6 @@ Once deployed to the real AWS cloud, verify the full-stack setup:
    - If the request is successful (HTTP 200) and displays data, it confirms:
      1. **Route 53** resolved `ec2-stage.shlomi.com` to CloudFront.
      2. **CloudFront** served the static frontend from the **S3 Bucket Website Origin**.
-     3. **CloudFront** matched the path `/api/*` and proxied the request to the **EC2 Backend Origin** (`ec2-raw.shlomi.com`).
+     3. **CloudFront** matched the path `/api/*` and proxied the request to the **EC2 Backend Origin** (`api-raw.shlomi.com`).
      4. The Spring Boot backend running in the **Docker Compose bridge network** successfully queried the isolated **MySQL database** container.
-
-
+```
